@@ -1,0 +1,39 @@
+{
+  "friendly_aliases": {
+    "deepseek-v4-flash": "baseten-deepseek-v4-flash",
+    "deepseek-v4-pro": "baseten-deepseek-v4-pro",
+    "gemini-3-flash": "gingerbread",
+    "gemini-3.1-pro": "galette-medium-thinking",
+    "gemini-3.5-flash": "vertex-gemini-3.5-flash",
+    "gemini-3.6-flash": "vertex-gemini-3.6-flash",
+    "gemini-3.7-flash": "grapefruit-zeppole",
+    "glm-5.2": "baseten-glm-5.2",
+    "gpt-5.2": "oatmeal-cookie",
+    "gpt-5.4": "oval-kumquat-medium",
+    "gpt-5.4-mini": "oregon-grape-medium",
+    "gpt-5.4-nano": "otaheite-apple-medium",
+    "gpt-5.5": "opal-quince-medium",
+    "gpt-5.6-luna": "olive-jellyroll",
+    "gpt-5.6-sol": "orange-mousse",
+    "gpt-5.6-terra": "orchid-muffin",
+    "grok-4.3": "xigua-mochi-medium",
+    "grok-4.5": "strawberry-whoopiepie",
+    "grok-4.6": "soursop-shortcake",
+    "grok-build-0.1": "xinomavro-cake",
+    "haiku-4.5": "anthropic-haiku-4.5",
+    "kimi-k2.6": "fireworks-kimi-k2.6",
+    "kimi-k2.7-code": "fireworks-kimi-k2.7",
+    "kimi-k3": "fireworks-kimi-k3",
+    "opus-4.6": "avocado-froyo-medium",
+    "opus-4.7": "apricot-sorbet-high",
+    "opus-4.8": "ambrosia-tart-high",
+    "opus-5": "agave-flan",
+    "sonnet-4.6": "almond-croissant-low",
+    "sonnet-5": "angel-cake-high"
+  },
+  "disabled_experimental_models": {
+    "gpt-6-astra": "orlando-quinn",
+    "fable-5": "acai-budino-high"
+  },
+  "updated_at": "2026-09-16T05:04:00+00:00"
+}

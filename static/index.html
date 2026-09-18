@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abofab Community — Autonomous AI Studio & Notion Bridge</title>
+  <link rel="icon" type="image/jpeg" href="/static/abofab_logo.jpg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+            },
+            gold: {
+              light: '#fde047',
+              DEFAULT: '#eab308',
+              dark: '#ca8a04',
+              metallic: '#ffd700'
+            },
+            surface: {
+              800: '#121826',
+              850: '#0c111c',
+              900: '#080c14',
+              950: '#05070c',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    code, pre, .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-card {
+      background: rgba(19, 27, 46, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: rgba(10, 15, 29, 0.5); }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 3px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(245, 158, 11, 0.4); }
+  </style>
+</head>
+<body class="bg-surface-950 text-slate-200 min-h-screen flex flex-col custom-scrollbar antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- Навбар -->
+  <header class="sticky top-0 z-50 border-b border-slate-800 bg-surface-950 px-5 py-2 shadow-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-2.5">
+      <div class="flex items-center gap-3">
+        <a href="/" class="relative group block flex-shrink-0">
+          <img src="/static/abofab_logo.jpg" alt="Abofab Community" class="w-9 h-9 rounded-xl object-cover ring-2 ring-amber-400 shadow-lg shadow-amber-500/25 transition-transform group-hover:scale-105">
+          <span class="absolute -top-1 -right-1 text-xs">👑</span>
+        </a>
+        <div>
+          <h1 class="font-black text-base text-white tracking-wide flex items-center gap-2">
+            <span class="bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent drop-shadow-sm">ABOFAB COMMUNITY</span>
+          </h1>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- Telegram Channel Link -->
+        <a href="https://t.me/+GRmYZVzzL9EwZWRi" target="_blank" class="px-2.5 py-1 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-400/30 text-[11px] font-bold text-sky-300 flex items-center gap-1 shadow-sm transition">
+          <i class="fa-brands fa-telegram text-sky-400 text-xs"></i>
+          <span>Канал</span>
+        </a>
+
+        <!-- Telegram Bot Link -->
+        <a href="https://t.me/AbofabBot" target="_blank" class="px-2.5 py-1 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/30 text-[11px] font-bold text-amber-300 flex items-center gap-1 shadow-sm transition">
+          <i class="fa-solid fa-robot text-amber-400 text-xs"></i>
+          <span>@AbofabBot</span>
+        </a>
+
+        <div id="bridgeStatusBadge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 text-[11px] font-medium">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse" id="bridgeStatusDot"></span>
+          <span class="text-slate-300">Bridge: <strong class="text-amber-400" id="bridgeStatusText">Онлайн (:8765)</strong></span>
+        </div>
+
+        <div id="managerStatusBadge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 text-[11px] font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-slate-300">Proxy: <strong class="text-emerald-400" id="managerStatusText">Онлайн (:8081)</strong></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Основной контейнер -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-3 space-y-2.5">
+
+    <!-- Abofab Community Hero Card -->
+    <div class="glass-card rounded-2xl p-3 border border-amber-500/30 bg-gradient-to-r from-amber-950/40 via-surface-900 to-surface-950 flex flex-col md:flex-row items-center justify-between gap-3 relative overflow-hidden shadow-xl shadow-amber-950/20">
+      <div class="z-10 flex-1">
+        <p class="text-xs sm:text-[13px] md:text-sm text-slate-200 font-medium leading-relaxed max-w-3xl">
+          Регистрация Business триалов Notion, прямой доступ к мощным моделям <strong class="text-amber-300 font-bold">Claude Opus 5</strong>, <strong class="text-amber-300 font-bold">Claude Sonnet 5</strong> и <strong class="text-amber-300 font-bold">GPT-5.6 Sol</strong>.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2 flex-shrink-0 z-10 w-full md:w-auto justify-end flex-wrap">
+        <a href="https://t.me/+GRmYZVzzL9EwZWRi" target="_blank" class="px-3 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-[11px] flex items-center gap-1.5 shadow-lg shadow-sky-500/20 transition transform hover:-translate-y-0.5">
+          <i class="fa-brands fa-telegram text-sm"></i>
+          <span>Канал Сообщества</span>
+        </a>
+        <a href="https://t.me/AbofabBot" target="_blank" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-extrabold text-[11px] flex items-center gap-1.5 shadow-lg shadow-amber-400/25 transition transform hover:-translate-y-0.5">
+          <i class="fa-solid fa-robot text-sm"></i>
+          <span>Telegram Бот</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Вкладки навигации -->
+    <div class="flex border-b border-slate-800 space-x-1.5 overflow-x-auto custom-scrollbar">
+      <button onclick="switchTab('register')" id="tabBtn-register" class="px-4 py-2 text-xs font-bold border-b-2 border-amber-400 text-amber-300 flex items-center gap-1.5 transition flex-shrink-0">
+        <i class="fa-solid fa-user-plus"></i> Регистратор Business Trial
+      </button>
+      <button onclick="switchTab('accounts')" id="tabBtn-accounts" class="px-4 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition flex-shrink-0">
+        <i class="fa-solid fa-users"></i> Пул аккаунтов (<span id="accountsCount">0</span>)
+      </button>
+      <button onclick="switchTab('api')" id="tabBtn-api" class="px-4 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition flex-shrink-0">
+        <i class="fa-solid fa-crown text-amber-400"></i> API ключ & Endpoint
+      </button>
+    </div>
+
+    <!-- ==================== ВКЛАДКА 1: РЕГИСТРАТОР ==================== -->
+    <section id="tab-register" class="space-y-3">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        
+        <!-- Левая колонка: Форма запуска -->
+        <div class="glass-card rounded-2xl p-3.5 space-y-2.5">
+          <div class="border-b border-slate-800/80 pb-1.5">
+            <h2 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-play text-amber-400"></i>
+              Запуск регистрации
+            </h2>
+            <p class="text-[10px] text-slate-400">Автоматическая активация Notion Business на 30 дней</p>
+          </div>
+
+          <!-- Пресет Playwright -->
+          <div class="space-y-1">
+            <label class="block text-[11px] font-semibold text-slate-300">Пресет Playwright</label>
+            <select id="activePresetSelect" class="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-200 focus:border-amber-400 focus:outline-none transition">
+              <option value="notion_business_trial_default">⚡ Notion Business Trial (Автоматический)</option>
+            </select>
+            <p id="presetDescriptionBadge" class="text-[10px] text-slate-400 leading-tight">Полный цикл: ввод email → OTP код → выбор Work → Free → Teamspaces → Start trial → сохранение</p>
+          </div>
+
+          <!-- Режим почты -->
+          <div class="space-y-2 pt-2 border-t border-slate-800/80">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-semibold text-slate-300">Источник Email</label>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i> Catch-All 100% обход фрода
+              </span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="setMailMode('catchall')" id="btnMailModeCatchall" class="p-2.5 rounded-xl border border-amber-400 bg-amber-500/10 text-amber-300 font-medium text-xs flex flex-col items-center justify-center gap-1 transition">
+                <i class="fa-solid fa-globe text-sm"></i> <span>Catch-All</span>
+              </button>
+              <button type="button" onclick="setMailMode('imap')" id="btnMailModeImap" class="p-2.5 rounded-xl border border-slate-700 bg-slate-800/50 text-slate-400 font-medium text-xs flex flex-col items-center justify-center gap-1 transition">
+                <i class="fa-solid fa-robot text-sm"></i> <span>Gmail IMAP</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Блок Catch-All Домена (Основной и рекомендуемый) -->
+          <div id="catchallFieldsBlock" class="space-y-2 p-2.5 rounded-xl bg-gradient-to-br from-amber-950/40 via-slate-900/60 to-slate-900 border border-amber-500/40 shadow-lg shadow-amber-500/5">
+            <div class="flex items-center justify-between border-b border-amber-500/20 pb-1">
+              <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-globe text-amber-400"></i> Свой Catch-All Домен
+              </span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-semibold border border-amber-400/30">
+                Cloudflare / IMAP
+              </span>
+            </div>
+
+            <!-- Домен -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="block text-[11px] font-semibold text-slate-300">Ваш Домен (например: <code>myteam.xyz</code>)</label>
+                <span class="text-[10px] text-amber-400 font-mono">Catch-All: *@домен</span>
+              </div>
+              <input type="text" id="catchallDomainInput" placeholder="myteam-workspace.xyz" class="w-full px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-700 text-xs focus:border-amber-400 focus:outline-none transition text-white font-mono" oninput="onCatchAllDomainChange()">
+            </div>
+
+            <!-- Стиль генерации -->
+            <div class="space-y-1">
+              <label class="block text-[11px] font-semibold text-slate-300">Стиль генерации email</label>
+              <select id="catchallStyleSelect" onchange="previewCatchAllEmails()" class="w-full px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-700 text-xs text-slate-200 focus:border-amber-400 focus:outline-none transition">
+                <option value="corporate">👔 Корпоративный (john.doe42@)</option>
+                <option value="tech">💻 Технический (dev_842@, lead_10@)</option>
+                <option value="short">⚡ Короткий (ntn_a89bc@)</option>
+              </select>
+            </div>
+
+            <!-- Количество аккаунтов и Многопоток (Параллельные браузеры) -->
+            <div class="grid grid-cols-2 gap-2">
+              <div class="space-y-1">
+                <div class="flex items-center justify-between">
+                  <label class="block text-[11px] font-semibold text-slate-300">Всего аккаунтов</label>
+                  <span class="text-[10px] text-slate-400">пакет</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <input type="number" id="catchallBatchCountInput" min="1" max="50" value="1" class="w-full px-2 py-1 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white font-mono focus:border-amber-400 focus:outline-none transition" onchange="updateBatchCalc(); previewCatchAllEmails();" oninput="updateBatchCalc();">
+                  <button type="button" onclick="setBatchCount(1)" class="px-1.5 py-1 text-[10px] rounded bg-slate-800 hover:bg-slate-700 text-slate-300">1</button>
+                  <button type="button" onclick="setBatchCount(3)" class="px-1.5 py-1 text-[10px] rounded bg-slate-800 hover:bg-slate-700 text-slate-300">3</button>
+                  <button type="button" onclick="setBatchCount(9)" class="px-1.5 py-1 text-[10px] rounded bg-slate-800 hover:bg-slate-700 text-slate-300">9</button>
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex items-center justify-between">
+                  <label class="block text-[11px] font-semibold text-slate-300">Браузеров за раз</label>
+                  <span class="text-[10px] text-amber-400 font-bold">многопоток</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <input type="number" id="catchallConcurrencyInput" min="1" max="10" value="1" class="w-full px-2 py-1 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white font-mono focus:border-amber-400 focus:outline-none transition" onchange="updateBatchCalc();" oninput="updateBatchCalc();">
+                  <button type="button" onclick="setConcurrency(1)" class="px-1.5 py-1 text-[10px] rounded bg-slate-800 hover:bg-slate-700 text-slate-300">1</button>
+                  <button type="button" onclick="setConcurrency(2)" class="px-1.5 py-1 text-[10px] rounded bg-slate-800 hover:bg-slate-700 text-slate-300">2</button>
+                  <button type="button" onclick="setConcurrency(3)" class="px-1.5 py-1 text-[10px] rounded bg-slate-800 hover:bg-slate-700 text-slate-300">3</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Индикатор проходок / батчей -->
+            <div id="batchCalcInfo" class="px-2.5 py-1 rounded-lg bg-amber-950/20 border border-amber-500/20 text-[10px] text-amber-300/90 flex items-center justify-between">
+              <span class="flex items-center gap-1.5">
+                <i class="fa-solid fa-layer-group text-amber-400"></i>
+                <span id="batchCalcText">1 аккаунт (1 браузер)</span>
+              </span>
+              <span id="batchCalcBadge" class="text-[9px] font-mono px-1 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30">1 проходка</span>
+            </div>
+
+            <!-- Предпросмотр сгенерированных адресов -->
+            <div class="p-2 rounded-lg bg-slate-950/80 border border-slate-800 space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-semibold text-slate-400 flex items-center gap-1">
+                  <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Предпросмотр адресов:
+                </span>
+                <button type="button" onclick="previewCatchAllEmails()" class="text-[10px] text-amber-400 hover:underline flex items-center gap-1">
+                  <i class="fa-solid fa-rotate"></i> Обновить
+                </button>
+              </div>
+              <div id="catchallPreviewList" class="flex flex-wrap gap-1 text-[10px] font-mono text-amber-300 min-h-[20px]">
+                <span class="text-slate-500 text-[10px]">Введите домен выше для генерации...</span>
+              </div>
+            </div>
+
+            <!-- Куда приходят письма (IMAP ящик) -->
+            <div class="space-y-1.5 pt-1.5 border-t border-slate-800/80">
+              <div class="flex items-center justify-between">
+                <label class="block text-[11px] font-semibold text-slate-300 flex items-center gap-1">
+                  <i class="fa-solid fa-inbox text-amber-400"></i> IMAP ящик-получатель
+                </label>
+                <button type="button" onclick="testImapConnection('catchall')" class="px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-[10px] text-amber-300 transition">
+                  <i class="fa-solid fa-plug"></i> Проверить IMAP
+                </button>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <input type="email" id="catchallRecipientEmail" value="huynamhuyvam1228@gmail.com" placeholder="myinbox@gmail.com" class="w-full px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white focus:border-amber-400 focus:outline-none transition">
+                </div>
+                <div>
+                  <input type="password" id="catchallImapPassword" placeholder="App Password" class="w-full px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white font-mono focus:border-amber-400 focus:outline-none transition">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Блок IMAP (Полный автомат для Gmail Dot Trick) -->
+          <div id="imapFieldsBlock" class="hidden space-y-3 p-3.5 rounded-xl bg-amber-950/20 border border-amber-500/30">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-bolt"></i> Gmail / IMAP Авто-парсер
+              </span>
+              <button type="button" onclick="testImapConnection('imap')" class="px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-[10px] text-amber-300 transition">
+                <i class="fa-solid fa-plug"></i> Проверить вход
+              </button>
+            </div>
+
+            <div class="space-y-1">
+              <label class="block text-[11px] font-semibold text-slate-300">Ваш Email (Gmail / IMAP)</label>
+              <input type="email" id="imapEmailInput" value="huynamhuyvam1228@gmail.com" class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs focus:border-amber-400 focus:outline-none transition text-white">
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="block text-[11px] font-semibold text-slate-300">Пароль приложения (App Password)</label>
+                <a href="https://myaccount.google.com/apppasswords" target="_blank" class="text-[10px] text-amber-400 hover:underline flex items-center gap-1">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Получить ключ Google
+                </a>
+              </div>
+              <input type="password" id="imapPasswordInput" placeholder="xxxx xxxx xxxx xxxx" class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs focus:border-amber-400 focus:outline-none transition text-white font-mono">
+              <p class="text-[10px] text-slate-400">16-значный ключ из настроек Google (Пароли приложений)</p>
+            </div>
+
+            <div class="pt-1 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-semibold text-slate-300 block">⚡ Gmail Dot Trick</span>
+                <span class="text-[10px] text-slate-400">Авто-генерация уникальных вариаций точек</span>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="autoDotTrickCheckbox" checked class="sr-only peer">
+                <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+              </label>
+            </div>
+
+            <details class="text-[11px] text-slate-400 pt-1">
+              <summary class="cursor-pointer hover:text-amber-300">Расширенные настройки IMAP (хост/порт)</summary>
+              <div class="grid grid-cols-2 gap-2 mt-2">
+                <div>
+                  <label class="text-[10px] block">Сервер</label>
+                  <input type="text" id="imapServerInput" value="imap.gmail.com" class="w-full px-2 py-1 rounded bg-slate-900 border border-slate-700 text-[11px] text-slate-200">
+                </div>
+                <div>
+                  <label class="text-[10px] block">Порт SSL</label>
+                  <input type="number" id="imapPortInput" value="993" class="w-full px-2 py-1 rounded bg-slate-900 border border-slate-700 text-[11px] text-slate-200">
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <!-- Поле ввода своей почты (для ручного режима) -->
+          <div id="manualEmailField" class="hidden space-y-1.5">
+            <label class="block text-xs font-semibold text-slate-300">Ваш Email адрес</label>
+            <input type="email" id="customEmailInput" value="huynamhuyvam1228@gmail.com" placeholder="user@gmail.com" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm focus:border-amber-400 focus:outline-none transition text-white">
+            <p class="text-[11px] text-slate-400">Код подтверждения вводится вручную в панели управления</p>
+          </div>
+
+        </div>
+
+        <!-- Правая колонка: Прогресс и Терминал логов -->
+        <div class="lg:col-span-2 space-y-3">
+
+          <!-- Пайплайн шагов -->
+          <div class="glass-card rounded-2xl p-3.5 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-amber-400"></i> Пайплайн активации (по гайду)
+              </h3>
+              <span id="activePresetBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-amber-300">Preset: default</span>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+              <div id="step-card-1" class="p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-bold text-[10px] shrink-0 step-num">1</span>
+                <span class="text-slate-300 font-medium text-[11px]">Email ящик</span>
+              </div>
+              <div id="step-card-2" class="p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-bold text-[10px] shrink-0 step-num">2</span>
+                <span class="text-slate-300 font-medium text-[11px]">Запрос кода</span>
+              </div>
+              <div id="step-card-3" class="p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-bold text-[10px] shrink-0 step-num">3</span>
+                <span class="text-slate-300 font-medium text-[11px]">Ввод OTP</span>
+              </div>
+              <div id="step-card-4" class="p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-bold text-[10px] shrink-0 step-num">4</span>
+                <span class="text-slate-300 font-medium text-[11px]">Выбор 'Work'</span>
+              </div>
+              <div id="step-card-5" class="p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-bold text-[10px] shrink-0 step-num">5</span>
+                <span class="text-slate-300 font-medium text-[11px]">Free план</span>
+              </div>
+              <div id="step-card-6" class="p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-bold text-[10px] shrink-0 step-num">6</span>
+                <span class="text-slate-300 font-medium text-[11px]">Teamspaces</span>
+              </div>
+              <div id="step-card-7" class="p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-bold text-[10px] shrink-0 step-num">7</span>
+                <span class="text-slate-300 font-medium text-[11px]">Start Trial</span>
+              </div>
+              <div id="step-card-8" class="p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-bold text-[10px] shrink-0 step-num">8</span>
+                <span class="text-slate-300 font-medium text-[11px]">В пул Go</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Терминал живого лога -->
+          <div class="glass-card rounded-2xl p-3.5 flex flex-col space-y-2">
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-2 px-1">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
+                <span class="text-xs font-mono font-medium text-slate-400 ml-1.5">Console Stream (SSE)</span>
+              </div>
+              <button onclick="clearLogs()" class="text-[11px] text-slate-400 hover:text-slate-200 transition">
+                <i class="fa-solid fa-trash-can"></i> Очистить
+              </button>
+            </div>
+            <div id="consoleLogs" class="font-mono text-xs p-2.5 bg-slate-950/80 rounded-xl h-32 overflow-y-auto space-y-1.5 custom-scrollbar text-slate-300">
+              <div class="text-slate-500">// Готов к регистрации. Нажмите "Запустить регистрацию" для старта...</div>
+            </div>
+          </div>
+
+          <!-- Блок запуска, прокси и параметров браузера (под логами) -->
+          <div class="glass-card rounded-2xl p-3.5 space-y-2.5">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+              
+              <!-- Прокси (md:col-span-7) -->
+              <div class="md:col-span-7 space-y-1.5 p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
+                <div class="flex items-center justify-between">
+                  <label class="block text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-shield-halved text-amber-400"></i> Upstream Proxy (Ручной ввод)
+                  </label>
+                  <div class="flex items-center gap-2">
+                    <button type="button" onclick="pasteProxyFromClipboard()" class="text-[10px] text-slate-400 hover:text-amber-300 flex items-center gap-1 transition" title="Вставить из буфера">
+                      <i class="fa-solid fa-paste"></i> Вставить
+                    </button>
+                    <button type="button" onclick="clearProxyInput()" class="text-[10px] text-slate-400 hover:text-rose-400 flex items-center gap-1 transition" title="Очистить прокси">
+                      <i class="fa-solid fa-xmark"></i> Сброс
+                    </button>
+                    <button type="button" id="btnTestProxy" onclick="testProxyConnection()" class="px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-[10px] text-amber-300 transition flex items-center gap-1">
+                      <i class="fa-solid fa-network-wired"></i> Проверить IP
+                    </button>
+                  </div>
+                </div>
+                <input type="text" id="proxyInput" list="proxyHistoryList" placeholder="http://user:pass@ip:port или ip:port:user:pass или socks5://..." class="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs focus:border-amber-400 focus:outline-none transition text-white font-mono">
+                <datalist id="proxyHistoryList">
+                  <option value="http://85.14.247.185:3128">Германия (Проверен)</option>
+                </datalist>
+                <div id="proxyTestResult" class="hidden text-xs py-1 px-2.5 rounded-lg items-center justify-between transition-all"></div>
+                <div class="flex items-center justify-between pt-0.5">
+                  <p class="text-[10px] text-slate-400">Поддерживаются: <code>HTTP</code>, <code>HTTPS</code>, <code>SOCKS5</code></p>
+                  <button type="button" onclick="document.getElementById('proxyInput').value='http://85.14.247.185:3128'; testProxyConnection();" class="text-[10px] text-amber-400 hover:text-amber-300 transition underline flex items-center gap-1">
+                    <i class="fa-solid fa-bolt text-amber-400"></i> Прокси DE (85.14.247.185:3128)
+                  </button>
+                </div>
+              </div>
+
+              <!-- Правая колонка: Визуальный браузер + Запуск (md:col-span-5) -->
+              <div class="md:col-span-5 flex flex-col justify-between space-y-2">
+                <!-- Визуальный браузер (Headed) -->
+                <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800">
+                  <div>
+                    <span class="text-xs font-semibold text-slate-300 block">Визуальный браузер (Headed)</span>
+                    <span class="text-[10px] text-slate-400">Показывать окно Chrome на экране</span>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="headedCheckbox" checked class="sr-only peer">
+                    <div class="w-10 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+                  </label>
+                </div>
+
+                <!-- Кнопка запуска -->
+                <button id="startRegBtn" onclick="startRegistration()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black shadow-lg shadow-amber-500/25 text-xs md:text-sm flex items-center justify-center gap-2 transition duration-200">
+                  <i class="fa-solid fa-play"></i> Запустить регистрацию & активацию Trial
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Блок ручного ввода кода -->
+            <div id="manualCodePrompt" class="hidden p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-2">
+              <div class="flex items-center gap-2 text-amber-400 font-semibold text-xs">
+                <i class="fa-solid fa-envelope-open-text"></i> Введите полученный проверочный код:
+              </div>
+              <div class="flex gap-2">
+                <input type="text" id="codeSubmitInput" placeholder="123456" maxlength="8" class="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-amber-500/50 text-center font-mono font-bold text-base tracking-widest text-white focus:outline-none">
+                <button onclick="submitManualCode()" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">
+                  Отправить
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== ВКЛАДКА 2: ПРЕСЕТЫ PLAYWRIGHT ==================== -->
+    <section id="tab-presets" class="hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-amber-400"></i> Конструктор пресетов Playwright
+          </h2>
+          <p class="text-xs text-slate-400">Полная настройка параметров браузера, селекторов, профилей и задержек под вашу среду</p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="runCodegen()" class="px-3.5 py-2 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-indigo-300 text-xs font-semibold flex items-center gap-2 transition">
+            <i class="fa-solid fa-video"></i> Playwright Codegen (Инспектор)
+          </button>
+          <button onclick="createNewPreset()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-semibold flex items-center gap-2 transition">
+            <i class="fa-solid fa-plus"></i> Новый пресет
+          </button>
+          <button onclick="saveCurrentPreset()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-blue-600 hover:from-amber-400 text-white text-xs font-bold flex items-center gap-2 transition shadow-lg shadow-amber-500/20">
+            <i class="fa-solid fa-floppy-disk"></i> Сохранить пресет
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Левая колонка: Список пресетов -->
+        <div class="glass-card rounded-2xl p-5 space-y-4">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Доступные пресеты</h3>
+          <div id="presetsListContainer" class="space-y-2">
+            <!-- Список пресетов заполняется динамически -->
+          </div>
+        </div>
+
+        <!-- Правая колонка: Редактор пресета (2 cols) -->
+        <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-5">
+          
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="font-bold text-white text-sm" id="editorPresetTitle">Настройка пресета</h3>
+              <p class="text-xs text-slate-400" id="editorPresetIdBadge">ID: notion_business_trial_default</p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="toggleJsonView()" id="btnToggleJson" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition">
+                <i class="fa-solid fa-code"></i> JSON Редактор
+              </button>
+            </div>
+          </div>
+
+          <!-- Форма визуального редактирования -->
+          <div id="presetVisualForm" class="space-y-4 text-xs">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-1.5">
+                <label class="font-semibold text-slate-300">Название пресета</label>
+                <input type="text" id="p_name" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 focus:outline-none">
+              </div>
+              <div class="space-y-1.5">
+                <label class="font-semibold text-slate-300">ID пресета (англ, без пробелов)</label>
+                <input type="text" id="p_id" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-400 font-mono focus:border-amber-400 focus:outline-none">
+              </div>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="font-semibold text-slate-300">Описание</label>
+              <input type="text" id="p_desc" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white focus:border-amber-400 focus:outline-none">
+            </div>
+
+            <!-- Браузерные параметры -->
+            <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+              <h4 class="font-bold text-amber-400 uppercase tracking-wider text-[11px]">Параметры запуска браузера</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="space-y-1">
+                  <label class="text-slate-400 font-medium">Режим запуска</label>
+                  <select id="p_headless" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white">
+                    <option value="false">Видимый (Headed, с окном)</option>
+                    <option value="true">Скрытый (Headless)</option>
+                  </select>
+                </div>
+                <div class="space-y-1">
+                  <label class="text-slate-400 font-medium">Тип профиля</label>
+                  <select id="p_persistent" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white">
+                    <option value="false">Инкогнито (Чистая сессия)</option>
+                    <option value="true">Persistent (Постоянный профиль)</option>
+                  </select>
+                </div>
+                <div class="space-y-1">
+                  <label class="text-slate-400 font-medium">Папка профиля</label>
+                  <input type="text" id="p_user_data_dir" value="browser_profiles/default" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono">
+                </div>
+              </div>
+              <div class="space-y-1 pt-1">
+                <label class="text-slate-400 font-medium flex items-center justify-between">
+                  <span>Статический прокси для данного пресета (опционально)</span>
+                  <span class="text-[10px] text-slate-500">HTTP / HTTPS / SOCKS5 / ip:port:user:pass</span>
+                </label>
+                <input type="text" id="p_proxy" placeholder="Оставьте пустым или введите http://... / socks5://..." class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono text-xs">
+              </div>
+            </div>
+
+            <!-- Селекторы элементов Notion -->
+            <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="font-bold text-amber-400 uppercase tracking-wider text-[11px]">Селекторы Notion (Playwright CSS/Text)</h4>
+                <button onclick="resetDefaultSelectors()" class="text-[11px] text-slate-400 hover:text-amber-300">Восстановить по умолчанию</button>
+              </div>
+              
+              <div class="space-y-2.5">
+                <div class="space-y-1">
+                  <label class="text-slate-400">Поле ввода Email (Шаг 2):</label>
+                  <input type="text" id="p_sel_email" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono text-xs">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-slate-400">Кнопка отправки Email (Continue):</label>
+                  <input type="text" id="p_sel_cont" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono text-xs">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-slate-400">Поле ввода проверочного кода OTP (Шаг 3):</label>
+                  <input type="text" id="p_sel_code" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono text-xs">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-slate-400">Выбор онбординга 'Work' (Шаг 4):</label>
+                  <input type="text" id="p_sel_work" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono text-xs">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-slate-400">Выбор Free плана (Шаг 5):</label>
+                  <input type="text" id="p_sel_free" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono text-xs">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-slate-400">Кнопка активации триала (Start free trial, Шаг 7):</label>
+                  <input type="text" id="p_sel_trial" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono text-xs">
+                </div>
+              </div>
+            </div>
+
+            <!-- Задержки и таймауты -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div class="space-y-1">
+                <label class="text-slate-400 text-[11px]">Таймаут шага (сек)</label>
+                <input type="number" id="p_timeout_step" value="25" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white">
+              </div>
+              <div class="space-y-1">
+                <label class="text-slate-400 text-[11px]">Таймаут почты (сек)</label>
+                <input type="number" id="p_timeout_mail" value="120" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white">
+              </div>
+              <div class="space-y-1">
+                <label class="text-slate-400 text-[11px]">Задержка перехода (мс)</label>
+                <input type="number" id="p_delay_nav" value="4000" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white">
+              </div>
+              <div class="space-y-1">
+                <label class="text-slate-400 text-[11px]">Задержка клика (мс)</label>
+                <input type="number" id="p_delay_click" value="1500" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white">
+              </div>
+            </div>
+
+          </div>
+
+          <!-- JSON Редактор (скрыт по умолчанию) -->
+          <div id="presetJsonView" class="hidden space-y-3">
+            <textarea id="jsonEditorArea" rows="18" class="w-full p-3 rounded-xl bg-slate-950 font-mono text-xs text-amber-300 border border-slate-700 focus:outline-none custom-scrollbar leading-relaxed"></textarea>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== ВКЛАДКА 3: ПУЛ АККАУНТОВ ==================== -->
+    <section id="tab-accounts" class="hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-white">Пул аккаунтов Notion</h2>
+          <p class="text-xs text-slate-400">Аккаунты из папки <code>accounts/</code> автоматически подгружаются в <code>notion-manager</code></p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="exportAccounts('json')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 flex items-center gap-2 transition">
+            <i class="fa-solid fa-file-code"></i> Экспорт в JSON
+          </button>
+          <button onclick="exportAccounts('txt')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 flex items-center gap-2 transition">
+            <i class="fa-solid fa-file-lines"></i> Экспорт в TXT
+          </button>
+          <button onclick="loadAccounts()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-semibold flex items-center gap-2 transition">
+            <i class="fa-solid fa-rotate-right"></i> Обновить
+          </button>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-900/60 text-slate-400 font-semibold uppercase tracking-wider">
+                <th class="p-4">Email / Воркспейс</th>
+                <th class="p-4">План</th>
+                <th class="p-4">Триал (Business)</th>
+                <th class="p-4">Token v2</th>
+                <th class="p-4">Space ID</th>
+                <th class="p-4 text-right">Действия</th>
+              </tr>
+            </thead>
+            <tbody id="accountsTableBody" class="divide-y divide-slate-800/60">
+              <tr>
+                <td colspan="6" class="p-6 text-center text-slate-500">Загрузка списка аккаунтов...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ВКЛАДКА 4: API & ИНТЕГРАЦИИ ==================== -->
+    <section id="tab-api" class="hidden space-y-6">
+
+      <!-- Плашка активного аккаунта -->
+      <div class="glass-card rounded-2xl p-5 border border-amber-400/30 bg-gradient-to-r from-amber-950/40 via-slate-900/60 to-slate-900/40 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-key"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-xs font-semibold text-amber-400 uppercase tracking-wider font-bold">Текущий активный аккаунт для API:</span>
+              <span id="apiActiveBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Активен</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                <i class="fa-solid fa-arrows-rotate text-amber-400"></i> Авто-ротация пула активна
+              </span>
+            </div>
+            <h3 class="text-sm font-bold text-white font-mono" id="apiActiveEmail">Загрузка аккаунта...</h3>
+            <p class="text-xs text-slate-400" id="apiActiveDetails">Осталось дней триала: ...</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="rotatePoolAccount()" class="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-xs font-bold text-amber-300 flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-shuffle"></i> Сменить аккаунт
+          </button>
+          <button onclick="reloadBridgeAccount()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-300 flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-rotate"></i> Синхронизировать
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Карточка 1: Автономный кодинг (OpenCode / Cursor / Cline) -->
+        <div class="glass-card rounded-2xl p-6 space-y-4 border border-amber-400/40 relative shadow-xl shadow-amber-950/20">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center font-bold">
+                <i class="fa-solid fa-code"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-white text-sm">OpenCode CLI</h3>
+                <p class="text-xs text-amber-300">Полный доступ к файлам и терминалу ПК (MCP)</p>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 text-[10px] font-mono font-bold">:8765</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
+              <span class="text-slate-400 block text-[11px]">Base URL:</span>
+              <code class="text-amber-300 font-bold font-mono">http://127.0.0.1:8765/v1</code>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
+              <span class="text-slate-400 block text-[11px]">API Key:</span>
+              <code class="text-slate-200 font-bold font-mono">local-notion-bridge</code>
+            </div>
+          </div>
+
+          <!-- Эндпоинты протоколов -->
+          <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1.5 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400 text-[11px] font-semibold uppercase tracking-wider">Поддерживаемые эндпоинты:</span>
+              <span class="text-emerald-400 text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">OpenAI & Anthropic</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono">
+              <div class="p-2 rounded-lg bg-slate-950 border border-slate-800/80 flex flex-col gap-0.5">
+                <span class="text-amber-400 font-bold text-[10px] uppercase">OpenAI Compatible (OpenCode):</span>
+                <code class="text-slate-200 text-[11px] select-all">/v1/chat/completions</code>
+              </div>
+              <div class="p-2 rounded-lg bg-slate-950 border border-slate-800/80 flex flex-col gap-0.5">
+                <span class="text-indigo-400 font-bold text-[10px] uppercase">Anthropic Messages:</span>
+                <code class="text-slate-200 text-[11px] select-all">/v1/messages</code>
+              </div>
+            </div>
+          </div>
+
+          <!-- Быстрый запуск команды -->
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex justify-between">
+              <span>Быстрый запуск в OpenCode:</span>
+            </label>
+            <div class="p-2.5 rounded-xl bg-slate-950 font-mono text-xs text-amber-300 relative flex items-center justify-between border border-slate-800">
+              <span>opencode -m abofab/opus-5</span>
+              <button onclick="copyText('opencode -m abofab/opus-5')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-[11px] text-slate-200 flex items-center gap-1 transition">
+                <i class="fa-solid fa-copy"></i> Копировать
+              </button>
+            </div>
+          </div>
+
+          <!-- Готовый конфиг OpenCode -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                Готовый блок для <code>~/.config/opencode/opencode.jsonc</code>:
+              </label>
+              <button onclick="copyOpenCodeConfig()" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 rounded text-[11px] font-extrabold text-slate-950 shadow-md shadow-amber-500/20 flex items-center gap-1 transition">
+                <i class="fa-solid fa-copy"></i> Скопировать конфиг
+              </button>
+            </div>
+            <pre class="p-3 rounded-xl bg-slate-950 font-mono text-[11px] text-slate-300 border border-slate-800 overflow-x-auto max-h-48 custom-scrollbar leading-relaxed" id="opencodeConfigPreview">"abofab": {
+  "name": "abofab",
+  "npm": "@ai-sdk/openai-compatible",
+  "options": {
+    "baseURL": "http://127.0.0.1:8765/v1",
+    "apiKey": "local-notion-bridge"
+  },
+  "models": {
+    "opus-5": { "name": "Claude Opus 5 (Notion AI)" },
+    "sonnet-5": { "name": "Claude Sonnet 5 (Notion AI)" },
+    "sonnet-4.6": { "name": "Claude Sonnet 4.6 (Notion AI)" },
+    "gpt-5.6-sol": { "name": "GPT-5.6 Sol (Notion AI)" },
+    "gpt-5.5": { "name": "GPT 5.5 (Notion AI)" },
+    "deepseek-v4-pro": { "name": "DeepSeek V4 Pro (Notion AI)" },
+    "gemini-3.1-pro": { "name": "Gemini 3.1 Pro (Notion AI)" },
+    "grok-4.6": { "name": "Grok 4.6 (Notion AI)" }
+  }
+}</pre>
+          </div>
+        </div>
+
+        <!-- Карточка 2: Обычный чат (Cherry Studio / Python / NextChat) -->
+        <div class="glass-card rounded-2xl p-6 space-y-4 border border-slate-800">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center font-bold">
+                <i class="fa-solid fa-comments"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-white text-sm">Cherry Studio / Чат & Python SDK</h3>
+                <p class="text-xs text-slate-400">Стандартный OpenAI-совместимый эндпоинт</p>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-md bg-pink-500/20 text-pink-300 text-[10px] font-mono font-bold">:8081</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
+              <span class="text-slate-400 block text-[11px]">Base URL:</span>
+              <code class="text-pink-300 font-bold font-mono">http://127.0.0.1:8081/v1</code>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
+              <span class="text-slate-400 block text-[11px]">API Key:</span>
+              <code class="text-slate-200 font-bold font-mono">sk-a99be21ebd90d87d796c314e8616b628</code>
+            </div>
+          </div>
+
+          <!-- Пример вызова Python -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Пример вызова через Python (OpenAI SDK):</label>
+              <button onclick="copyPythonExample()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-[11px] text-slate-200 flex items-center gap-1 transition">
+                <i class="fa-solid fa-copy"></i> Копировать
+              </button>
+            </div>
+            <pre class="p-3 rounded-xl bg-slate-950 font-mono text-[11px] text-slate-300 border border-slate-800 overflow-x-auto max-h-48 custom-scrollbar leading-relaxed" id="pythonExamplePreview">from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://127.0.0.1:8765/v1",  # Для кодинга (или :8081 для чата)
+    api_key="local-notion-bridge"
+)
+
+response = client.chat.completions.create(
+    model="opus-5",  # sonnet-5, gpt-5.6-sol
+    messages=[{"role": "user", "content": "Привет! Напиши скрипт на Python"}]
+)
+print(response.choices[0].message.content)</pre>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Каталог проверенных моделей -->
+      <div class="glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-brain text-amber-400"></i> Рабочие модели Notion AI
+          </h3>
+          <span class="text-xs text-slate-400">Все модели работают на 30-дневном тарифе Business</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 text-xs">
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-amber-500/30 space-y-1">
+            <div class="flex items-center justify-between">
+              <strong class="text-white font-bold">Claude Opus 5</strong>
+              <span class="text-[10px] text-emerald-400 font-bold">200 OK</span>
+            </div>
+            <code class="text-amber-300 text-[11px] font-mono block select-all">opus-5</code>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-amber-500/30 space-y-1">
+            <div class="flex items-center justify-between">
+              <strong class="text-white font-bold">Claude Sonnet 5</strong>
+              <span class="text-[10px] text-emerald-400 font-bold">200 OK</span>
+            </div>
+            <code class="text-amber-300 text-[11px] font-mono block select-all">sonnet-5</code>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+            <div class="flex items-center justify-between">
+              <strong class="text-white font-bold">Claude Sonnet 4.6</strong>
+              <span class="text-[10px] text-emerald-400 font-bold">200 OK</span>
+            </div>
+            <code class="text-amber-300 text-[11px] font-mono block select-all">sonnet-4.6</code>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-amber-500/30 space-y-1">
+            <div class="flex items-center justify-between">
+              <strong class="text-white font-bold">GPT-5.6 Sol</strong>
+              <span class="text-[10px] text-emerald-400 font-bold">200 OK</span>
+            </div>
+            <code class="text-amber-300 text-[11px] font-mono block select-all">gpt-5.6-sol</code>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+            <div class="flex items-center justify-between">
+              <strong class="text-white font-bold">GPT 5.5</strong>
+              <span class="text-[10px] text-emerald-400 font-bold">200 OK</span>
+            </div>
+            <code class="text-amber-300 text-[11px] font-mono block select-all">gpt-5.5</code>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+            <div class="flex items-center justify-between">
+              <strong class="text-white font-bold">Gemini 3.1 Pro</strong>
+              <span class="text-[10px] text-emerald-400 font-bold">200 OK</span>
+            </div>
+            <code class="text-amber-300 text-[11px] font-mono block select-all">gemini-3.1-pro</code>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+            <div class="flex items-center justify-between">
+              <strong class="text-white font-bold">DeepSeek V4 Pro</strong>
+              <span class="text-[10px] text-emerald-400 font-bold">200 OK</span>
+            </div>
+            <code class="text-amber-300 text-[11px] font-mono block select-all">deepseek-v4-pro</code>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+            <div class="flex items-center justify-between">
+              <strong class="text-white font-bold">Grok 4.6</strong>
+              <span class="text-[10px] text-emerald-400 font-bold">200 OK</span>
+            </div>
+            <code class="text-amber-300 text-[11px] font-mono block select-all">grok-4.6</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+  </main>
+
+  <!-- Футер Abofab Community -->
+  <footer class="border-t border-slate-800/80 glass-card px-6 py-6 text-xs text-slate-400 mt-10">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="/static/abofab_logo.jpg" alt="Abofab Logo" class="w-8 h-8 rounded-lg object-cover ring-1 ring-amber-400/50">
+        <span class="font-extrabold text-white text-sm tracking-wide">Abofab Community</span>
+      </div>
+
+      <div class="flex items-center gap-4 flex-wrap justify-center font-medium">
+        <a href="https://t.me/+GRmYZVzzL9EwZWRi" target="_blank" class="text-sky-400 hover:text-sky-300 flex items-center gap-1.5 transition">
+          <i class="fa-brands fa-telegram"></i> Telegram Канал
+        </a>
+        <span class="text-slate-700">•</span>
+        <a href="https://t.me/AbofabBot" target="_blank" class="text-amber-400 hover:text-amber-300 flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-robot"></i> Telegram Бот (@AbofabBot)
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let mailMode = 'catchall';
+    let eventSource = null;
+    let currentPresets = [];
+    let currentEditingPreset = null;
+    let isJsonView = false;
+    let catchallPreviewDebounce = null;
+
+    function switchTab(tabId) {
+      const tabs = ['register', 'accounts', 'api'];
+      tabs.forEach(t => {
+        const tabEl = document.getElementById(`tab-${t}`);
+        if (tabEl) tabEl.classList.add('hidden');
+        const btn = document.getElementById(`tabBtn-${t}`);
+        if (btn) {
+          btn.classList.remove('border-amber-400', 'text-amber-300');
+          btn.classList.add('border-transparent', 'text-slate-400');
+        }
+      });
+
+      const activeTab = document.getElementById(`tab-${tabId}`);
+      if (activeTab) activeTab.classList.remove('hidden');
+      const activeBtn = document.getElementById(`tabBtn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.add('border-amber-400', 'text-amber-300');
+        activeBtn.classList.remove('border-transparent', 'text-slate-400');
+      }
+
+      if (tabId === 'accounts') loadAccounts();
+    }
+
+    function setMailMode(mode) {
+      mailMode = mode;
+      const btnCatchall = document.getElementById('btnMailModeCatchall');
+      const btnImap = document.getElementById('btnMailModeImap');
+      const btnManual = document.getElementById('btnMailModeManual');
+      const btnTemp = document.getElementById('btnMailModeTemp');
+
+      const catchallBlock = document.getElementById('catchallFieldsBlock');
+      const imapBlock = document.getElementById('imapFieldsBlock');
+      const manualField = document.getElementById('manualEmailField');
+
+      const activeClass = "p-2 rounded-xl border border-amber-400 bg-amber-500/10 text-amber-300 font-medium text-xs flex flex-col items-center justify-center gap-1 transition";
+      const inactiveClass = "p-2 rounded-xl border border-slate-700 bg-slate-800/50 text-slate-400 font-medium text-xs flex flex-col items-center justify-center gap-1 transition";
+
+      if (btnCatchall) btnCatchall.className = mode === 'catchall' ? activeClass : inactiveClass;
+      if (btnImap) btnImap.className = mode === 'imap' ? activeClass : inactiveClass;
+      if (btnManual) btnManual.className = mode === 'manual' ? activeClass : inactiveClass;
+      if (btnTemp) btnTemp.className = mode === 'temp' ? activeClass : inactiveClass;
+
+      if (catchallBlock) catchallBlock.classList.toggle('hidden', mode !== 'catchall');
+      if (imapBlock) imapBlock.classList.toggle('hidden', mode !== 'imap');
+      if (manualField) manualField.classList.toggle('hidden', mode !== 'manual');
+
+      if (mode === 'catchall') {
+        previewCatchAllEmails();
+      }
+    }
+
+    function setBatchCount(val) {
+      const input = document.getElementById('catchallBatchCountInput');
+      if (input) {
+        input.value = val;
+        updateBatchCalc();
+        previewCatchAllEmails();
+      }
+    }
+
+    function setConcurrency(val) {
+      const input = document.getElementById('catchallConcurrencyInput');
+      if (input) {
+        input.value = val;
+        updateBatchCalc();
+      }
+    }
+
+    function updateBatchCalc() {
+      const totalInput = document.getElementById('catchallBatchCountInput');
+      const concInput = document.getElementById('catchallConcurrencyInput');
+      const textEl = document.getElementById('batchCalcText');
+      const badgeEl = document.getElementById('batchCalcBadge');
+
+      const total = parseInt(totalInput ? totalInput.value : '1') || 1;
+      const conc = parseInt(concInput ? concInput.value : '1') || 1;
+      const safeTotal = Math.max(1, Math.min(total, 50));
+      const safeConc = Math.max(1, Math.min(conc, 10));
+
+      const effectiveConc = Math.min(safeConc, safeTotal);
+      const passes = Math.ceil(safeTotal / effectiveConc);
+
+      if (textEl && badgeEl) {
+        if (effectiveConc === 1) {
+          textEl.innerText = `${safeTotal} акк. по очереди (1 браузер)`;
+          badgeEl.innerText = `${safeTotal} ${safeTotal === 1 ? 'проходка' : (safeTotal < 5 ? 'проходки' : 'проходок')}`;
+        } else {
+          textEl.innerText = `${safeTotal} акк. (${effectiveConc} браузера одновременно)`;
+          badgeEl.innerText = `${passes} ${passes === 1 ? 'проходка' : (passes < 5 ? 'проходки' : 'проходок')}`;
+        }
+      }
+    }
+
+    function onCatchAllDomainChange() {
+      clearTimeout(catchallPreviewDebounce);
+      catchallPreviewDebounce = setTimeout(previewCatchAllEmails, 350);
+    }
+
+    function previewCatchAllEmails() {
+      const domainInput = document.getElementById('catchallDomainInput');
+      const styleSelect = document.getElementById('catchallStyleSelect');
+      const countInput = document.getElementById('catchallBatchCountInput');
+      const previewList = document.getElementById('catchallPreviewList');
+      if (!domainInput || !previewList) return;
+
+      const domain = domainInput.value.trim();
+      const style = styleSelect ? styleSelect.value : 'corporate';
+      const count = Math.min(Math.max(parseInt(countInput ? countInput.value : 3) || 3, 1), 6);
+
+      if (!domain) {
+        previewList.innerHTML = '<span class="text-slate-500 text-[10px]">Введите домен выше для генерации примеров...</span>';
+        return;
+      }
+
+      previewList.innerHTML = '<span class="text-slate-400 text-[10px] flex items-center gap-1"><i class="fa-solid fa-spinner fa-spin text-amber-400"></i> Генерация...</span>';
+
+      fetch('/api/catchall/preview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ domain: domain, style: style, count: count })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.sample_emails && data.sample_emails.length > 0) {
+          previewList.innerHTML = data.sample_emails.map(e => `
+            <span class="px-2 py-0.5 rounded bg-amber-950/60 border border-amber-500/30 text-amber-300 text-[10px] font-mono select-all">
+              ${e}
+            </span>
+          `).join('');
+        } else {
+          previewList.innerHTML = '<span class="text-rose-400 text-[10px]">Не удалось сгенерировать</span>';
+        }
+      })
+      .catch(() => {
+        const clean = domain.replace(/^@/, '');
+        const samples = [`alex.smith24@${clean}`, `michael.brown7@${clean}`, `dev_842@${clean}`];
+        previewList.innerHTML = samples.map(e => `
+          <span class="px-2 py-0.5 rounded bg-amber-950/60 border border-amber-500/30 text-amber-300 text-[10px] font-mono select-all">
+            ${e}
+          </span>
+        `).join('');
+      });
+    }
+
+    function testImapConnection(source = 'imap') {
+      let email, password, server, port;
+      if (source === 'catchall') {
+        email = (document.getElementById('catchallRecipientEmail') ? document.getElementById('catchallRecipientEmail').value : '').trim();
+        password = (document.getElementById('catchallImapPassword') ? document.getElementById('catchallImapPassword').value : '').trim() ||
+                   (document.getElementById('imapPasswordInput') ? document.getElementById('imapPasswordInput').value : '').trim();
+        server = (document.getElementById('imapServerInput') ? document.getElementById('imapServerInput').value : 'imap.gmail.com').trim();
+        port = (document.getElementById('imapPortInput') ? document.getElementById('imapPortInput').value : '993').trim();
+      } else {
+        email = (document.getElementById('imapEmailInput') ? document.getElementById('imapEmailInput').value : '').trim();
+        password = (document.getElementById('imapPasswordInput') ? document.getElementById('imapPasswordInput').value : '').trim() ||
+                   (document.getElementById('catchallImapPassword') ? document.getElementById('catchallImapPassword').value : '').trim();
+        server = (document.getElementById('imapServerInput') ? document.getElementById('imapServerInput').value : 'imap.gmail.com').trim();
+        port = (document.getElementById('imapPortInput') ? document.getElementById('imapPortInput').value : '993').trim();
+      }
+
+      if (!email || !password) {
+        alert('Пожалуйста, укажите Email и Пароль приложения (App Password)');
+        return;
+      }
+
+      appendLog('info', `Проверка подключения к IMAP ${server}:${port} (${email})...`);
+      fetch('/api/imap/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          imap_password: password,
+          imap_server: server,
+          imap_port: parseInt(port) || 993
+        })
+      })
+      .then(res => res.json().then(data => ({ status: res.status, data })))
+      .then(({ status, data }) => {
+        if (status === 200 && data.success) {
+          alert('✔ ' + data.message);
+          appendLog('success', data.message);
+        } else {
+          alert('❌ Ошибка: ' + (data.detail || 'Не удалось подключиться к IMAP'));
+          appendLog('error', 'IMAP ошибка: ' + (data.detail || 'Отклонено'));
+        }
+      })
+      .catch(err => {
+        alert('Ошибка запроса: ' + err);
+        appendLog('error', 'Сетевая ошибка: ' + err);
+      });
+    }
+
+    function testProxyConnection() {
+      const proxyInput = document.getElementById('proxyInput');
+      const proxy = proxyInput.value.trim();
+      const resBadge = document.getElementById('proxyTestResult');
+      const btn = document.getElementById('btnTestProxy');
+
+      if (!proxy) {
+        alert('Пожалуйста, введите строку прокси для проверки!');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Тест...';
+      resBadge.className = "text-xs py-1.5 px-3 rounded-lg flex items-center gap-2 bg-slate-900 border border-slate-700 text-slate-300";
+      resBadge.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-amber-400"></i> Проверка подключения к прокси...';
+      resBadge.classList.remove('hidden');
+
+      appendLog('info', `Проверка прокси ${proxy}...`);
+      fetch('/api/proxy/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ proxy: proxy })
+      })
+      .then(res => res.json().then(data => ({ status: res.status, data })))
+      .then(({ status, data }) => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-network-wired"></i> Проверить IP';
+        if (status === 200 && data.success) {
+          const geoStr = data.geo ? ` (${data.geo})` : '';
+          resBadge.className = "text-xs py-1.5 px-3 rounded-lg flex items-center justify-between bg-emerald-950/40 text-emerald-300 border border-emerald-500/40";
+          resBadge.innerHTML = `<span><i class="fa-solid fa-circle-check text-emerald-400"></i> Прокси активен! IP: <strong>${data.ip}</strong>${geoStr}</span><span class="text-[10px] font-mono text-emerald-400 uppercase">${data.scheme || 'OK'}</span>`;
+          appendLog('success', `✔ Прокси рабочий: ${data.ip}${geoStr}`);
+          saveProxyToHistory(proxy);
+        } else {
+          const errMsg = data.detail || data.error || 'Не удалось подключиться через прокси';
+          resBadge.className = "text-xs py-1.5 px-3 rounded-lg flex items-center gap-2 bg-rose-950/40 text-rose-300 border border-rose-500/40";
+          resBadge.innerHTML = `<span><i class="fa-solid fa-triangle-exclamation text-rose-400"></i> ${errMsg}</span>`;
+          appendLog('error', `❌ Прокси ошибка: ${errMsg}`);
+        }
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-network-wired"></i> Проверить IP';
+        resBadge.className = "text-xs py-1.5 px-3 rounded-lg flex items-center gap-2 bg-rose-950/40 text-rose-300 border border-rose-500/40";
+        resBadge.innerHTML = `<span><i class="fa-solid fa-triangle-exclamation text-rose-400"></i> Ошибка сети: ${err}</span>`;
+        appendLog('error', 'Сетевая ошибка: ' + err);
+      });
+    }
+
+    async function pasteProxyFromClipboard() {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+          document.getElementById('proxyInput').value = text.trim();
+          testProxyConnection();
+        }
+      } catch (err) {
+        const manual = prompt("Вставьте строку прокси:");
+        if (manual) {
+          document.getElementById('proxyInput').value = manual.trim();
+          testProxyConnection();
+        }
+      }
+    }
+
+    function clearProxyInput() {
+      document.getElementById('proxyInput').value = '';
+      const resBadge = document.getElementById('proxyTestResult');
+      resBadge.classList.add('hidden');
+      localStorage.removeItem('notion_last_proxy');
+      appendLog('info', 'Прокси сброшен. Регистрация будет использовать прямое подключение.');
+    }
+
+    function saveProxyToHistory(proxyStr) {
+      try {
+        localStorage.setItem('notion_last_proxy', proxyStr);
+        let list = JSON.parse(localStorage.getItem('notion_proxy_history') || '[]');
+        if (!list.includes(proxyStr)) {
+          list.unshift(proxyStr);
+          if (list.length > 10) list.pop();
+          localStorage.setItem('notion_proxy_history', JSON.stringify(list));
+        }
+        renderProxyHistory();
+      } catch (e) {}
+    }
+
+    function renderProxyHistory() {
+      try {
+        const datalist = document.getElementById('proxyHistoryList');
+        if (!datalist) return;
+        const list = JSON.parse(localStorage.getItem('notion_proxy_history') || '[]');
+        datalist.innerHTML = list.map(item => `<option value="${item}"></option>`).join('');
+      } catch (e) {}
+    }
+
+    function loadSavedProxy() {
+      try {
+        const last = localStorage.getItem('notion_last_proxy');
+        if (last) {
+          const input = document.getElementById('proxyInput');
+          if (input && !input.value) input.value = last;
+        }
+        renderProxyHistory();
+      } catch (e) {}
+    }
+
+    // ── Управление пресетами ────────────────────────────────────────────────
+    function loadPresets() {
+      fetch('/api/presets')
+        .then(res => res.json())
+        .then(data => {
+          currentPresets = data.presets || [];
+          renderPresetsList();
+          renderPresetSelectOptions();
+        });
+    }
+
+    function renderPresetSelectOptions() {
+      const select = document.getElementById('activePresetSelect');
+      const filtered = currentPresets.filter(p => p.id === 'notion_business_trial_default');
+      const list = filtered.length ? filtered : currentPresets.slice(0, 1);
+      select.innerHTML = list.map(p => `
+        <option value="${p.id}">${p.name}</option>
+      `).join('');
+      select.value = 'notion_business_trial_default';
+      onPresetSelected();
+    }
+
+    function onPresetSelected() {
+      const select = document.getElementById('activePresetSelect');
+      const p = currentPresets.find(x => x.id === select.value) || currentPresets[0];
+      if (p) {
+        document.getElementById('presetDescriptionBadge').innerText = p.description || '';
+        document.getElementById('activePresetBadge').innerText = 'Preset: ' + p.name;
+        document.getElementById('headedCheckbox').checked = !p.browser?.headless;
+      }
+    }
+
+    function renderPresetsList() {
+      const container = document.getElementById('presetsListContainer');
+      container.innerHTML = currentPresets.map(p => `
+        <div onclick="selectPresetForEdit('${p.id}')" class="p-3 rounded-xl border border-slate-800 hover:border-amber-500/40 bg-slate-900/60 cursor-pointer transition flex items-center justify-between group">
+          <div>
+            <div class="font-semibold text-white text-xs">${p.name}</div>
+            <div class="text-[10px] text-slate-400 font-mono">${p.id}</div>
+          </div>
+          <button onclick="event.stopPropagation(); deletePresetItem('${p.id}')" class="opacity-0 group-hover:opacity-100 p-1 hover:text-rose-400 transition" title="Удалить пресет">
+            <i class="fa-solid fa-trash text-xs"></i>
+          </button>
+        </div>
+      `).join('');
+
+      if (!currentEditingPreset && currentPresets.length > 0) {
+        selectPresetForEdit(currentPresets[0].id);
+      }
+    }
+
+    function selectPresetForEdit(presetId) {
+      const p = currentPresets.find(x => x.id === presetId);
+      if (!p) return;
+      currentEditingPreset = JSON.parse(JSON.stringify(p));
+
+      document.getElementById('editorPresetTitle').innerText = p.name;
+      document.getElementById('editorPresetIdBadge').innerText = 'ID: ' + p.id;
+
+      document.getElementById('p_name').value = p.name || '';
+      document.getElementById('p_id').value = p.id || '';
+      document.getElementById('p_desc').value = p.description || '';
+
+      document.getElementById('p_headless').value = p.browser?.headless ? 'true' : 'false';
+      document.getElementById('p_persistent').value = p.browser?.use_persistent_context ? 'true' : 'false';
+      document.getElementById('p_user_data_dir').value = p.browser?.user_data_dir || 'browser_profiles/default';
+      document.getElementById('p_proxy').value = p.browser?.proxy || '';
+
+      const sels = p.selectors || {};
+      document.getElementById('p_sel_email').value = sels.email_input || '';
+      document.getElementById('p_sel_cont').value = sels.continue_btn || '';
+      document.getElementById('p_sel_code').value = sels.code_input || '';
+      document.getElementById('p_sel_work').value = sels.onboarding_work || '';
+      document.getElementById('p_sel_free').value = sels.free_plan || '';
+      document.getElementById('p_sel_trial').value = sels.start_trial_btn || '';
+
+      const delays = p.delays || {};
+      document.getElementById('p_timeout_step').value = delays.step_timeout_sec || 25;
+      document.getElementById('p_timeout_mail').value = delays.mail_timeout_sec || 120;
+      document.getElementById('p_delay_nav').value = delays.after_navigate_ms || 4000;
+      document.getElementById('p_delay_click').value = delays.after_click_ms || 1500;
+
+      document.getElementById('jsonEditorArea').value = JSON.stringify(p, null, 2);
+    }
+
+    function toggleJsonView() {
+      isJsonView = !isJsonView;
+      const form = document.getElementById('presetVisualForm');
+      const jsonArea = document.getElementById('presetJsonView');
+      const btn = document.getElementById('btnToggleJson');
+
+      if (isJsonView) {
+        syncFormToJson();
+        form.classList.add('hidden');
+        jsonArea.classList.remove('hidden');
+        btn.innerHTML = '<i class="fa-solid fa-list"></i> Форма';
+      } else {
+        syncJsonToForm();
+        jsonArea.classList.add('hidden');
+        form.classList.remove('hidden');
+        btn.innerHTML = '<i class="fa-solid fa-code"></i> JSON';
+      }
+    }
+
+    function syncFormToJson() {
+      if (!currentEditingPreset) currentEditingPreset = {};
+      currentEditingPreset.name = document.getElementById('p_name').value;
+      currentEditingPreset.id = document.getElementById('p_id').value;
+      currentEditingPreset.description = document.getElementById('p_desc').value;
+
+      if (!currentEditingPreset.browser) currentEditingPreset.browser = {};
+      currentEditingPreset.browser.headless = document.getElementById('p_headless').value === 'true';
+      currentEditingPreset.browser.use_persistent_context = document.getElementById('p_persistent').value === 'true';
+      currentEditingPreset.browser.user_data_dir = document.getElementById('p_user_data_dir').value;
+      const customProxy = document.getElementById('p_proxy').value.trim();
+      if (customProxy) {
+        currentEditingPreset.browser.proxy = customProxy;
+      } else {
+        delete currentEditingPreset.browser.proxy;
+      }
+
+      if (!currentEditingPreset.selectors) currentEditingPreset.selectors = {};
+      currentEditingPreset.selectors.email_input = document.getElementById('p_sel_email').value;
+      currentEditingPreset.selectors.continue_btn = document.getElementById('p_sel_cont').value;
+      currentEditingPreset.selectors.code_input = document.getElementById('p_sel_code').value;
+      currentEditingPreset.selectors.onboarding_work = document.getElementById('p_sel_work').value;
+      currentEditingPreset.selectors.free_plan = document.getElementById('p_sel_free').value;
+      currentEditingPreset.selectors.start_trial_btn = document.getElementById('p_sel_trial').value;
+
+      if (!currentEditingPreset.delays) currentEditingPreset.delays = {};
+      currentEditingPreset.delays.step_timeout_sec = parseInt(document.getElementById('p_timeout_step').value) || 25;
+      currentEditingPreset.delays.mail_timeout_sec = parseInt(document.getElementById('p_timeout_mail').value) || 120;
+      currentEditingPreset.delays.after_navigate_ms = parseInt(document.getElementById('p_delay_nav').value) || 4000;
+      currentEditingPreset.delays.after_click_ms = parseInt(document.getElementById('p_delay_click').value) || 1500;
+
+      document.getElementById('jsonEditorArea').value = JSON.stringify(currentEditingPreset, null, 2);
+    }
+
+    function syncJsonToForm() {
+      try {
+        currentEditingPreset = JSON.parse(document.getElementById('jsonEditorArea').value);
+        selectPresetForEdit(currentEditingPreset.id);
+      } catch (e) {
+        alert('Ошибка синтаксиса JSON: ' + e);
+      }
+    }
+
+    function createNewPreset() {
+      const newId = 'custom_' + Date.now().toString().slice(-4);
+      const newPreset = {
+        id: newId,
+        name: 'Новый пресет ' + newId,
+        description: 'Пользовательский пресет Playwright',
+        browser: {
+          channel: 'chrome',
+          headless: false,
+          use_persistent_context: false,
+          user_data_dir: 'browser_profiles/' + newId,
+          args: ['--disable-blink-features=AutomationControlled', '--start-maximized']
+        },
+        urls: { signup: 'https://app.notion.com/signup' },
+        selectors: {
+          email_input: "input[type='email'], input[placeholder*='name@company.com' i], input[type='text']",
+          continue_btn: "button:has-text('Continue with email'), button:has-text('Continue')",
+          code_input: "input[placeholder*='code' i], input[autocomplete='one-time-code']",
+          onboarding_work: "text='For work', text='With my team'",
+          skip_buttons: "button:has-text('Skip'), button:has-text('Skip for now')",
+          free_plan: "text='Free plan', text='Free', button:has-text('Continue with Free')",
+          start_trial_btn: "button:has-text('Start free trial')"
+        },
+        delays: { after_navigate_ms: 4000, after_click_ms: 1500, step_timeout_sec: 25, mail_timeout_sec: 120 },
+        workspace: { default_name: 'Business Team', teamspace_name: 'Main Teamspace' }
+      };
+
+      currentPresets.push(newPreset);
+      renderPresetsList();
+      selectPresetForEdit(newId);
+    }
+
+    function saveCurrentPreset() {
+      if (isJsonView) {
+        syncJsonToForm();
+      } else {
+        syncFormToJson();
+      }
+
+      fetch('/api/presets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentEditingPreset)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert('Пресет успешно сохранён!');
+          loadPresets();
+        }
+      });
+    }
+
+    function deletePresetItem(presetId) {
+      if (presetId === 'notion_business_trial_default') {
+        alert('Базовый дефолтный пресет нельзя удалить.');
+        return;
+      }
+      if (!confirm(`Удалить пресет ${presetId}?`)) return;
+
+      fetch(`/api/presets/${presetId}`, { method: 'DELETE' })
+        .then(res => res.json())
+        .then(() => loadPresets());
+    }
+
+    function runCodegen() {
+      fetch('/api/playwright/codegen', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          alert('Запущен Playwright Inspector (Codegen) в отдельном окне. Вы можете кликать по элементам Notion и копировать точные селекторы!');
+        });
+    }
+
+    function resetDefaultSelectors() {
+      document.getElementById('p_sel_email').value = "input[type='email'], input[placeholder*='name@company.com' i], input[type='text']";
+      document.getElementById('p_sel_cont').value = "button:has-text('Continue with email'), button:has-text('Continue')";
+      document.getElementById('p_sel_code').value = "input[placeholder*='code' i], input[autocomplete='one-time-code'], input[type='text']";
+      document.getElementById('p_sel_work').value = "text='For work', text='With my team', text='For my team', text='Work'";
+      document.getElementById('p_sel_free').value = "text='Free plan', text='Free', button:has-text('Continue with Free'), [data-testid='free-plan-card']";
+      document.getElementById('p_sel_trial').value = "button:has-text('Start free trial'), text='Start free trial', button:has-text('Try Business')";
+    }
+
+    // ── Логирование и запуск ────────────────────────────────────────────────
+    function appendLog(level, message, time) {
+      const logsContainer = document.getElementById('consoleLogs');
+      const logLine = document.createElement('div');
+      
+      let levelBadge = '';
+      if (level === 'info') levelBadge = '<span class="text-amber-400 font-bold">[INFO]</span>';
+      else if (level === 'warning') levelBadge = '<span class="text-amber-400 font-bold">[WAIT]</span>';
+      else if (level === 'success') levelBadge = '<span class="text-emerald-400 font-bold">[SUCCESS]</span>';
+      else if (level === 'error') levelBadge = '<span class="text-rose-400 font-bold">[ERROR]</span>';
+
+      logLine.innerHTML = `<span class="text-slate-500">${time || new Date().toLocaleTimeString()}</span> ${levelBadge} ${message}`;
+      logsContainer.appendChild(logLine);
+      logsContainer.scrollTop = logsContainer.scrollHeight;
+    }
+
+    function clearLogs() {
+      document.getElementById('consoleLogs').innerHTML = '<div class="text-slate-500">// Логи очищены</div>';
+    }
+
+    function updateStepUI(stepNum) {
+      for (let i = 1; i <= 8; i++) {
+        const card = document.getElementById(`step-card-${i}`);
+        const numSpan = card.querySelector('.step-num');
+        if (i < stepNum) {
+          card.className = "p-3 rounded-xl border border-emerald-500/40 bg-emerald-950/20 flex items-center gap-2.5";
+          numSpan.className = "w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-bold text-[11px] shrink-0 step-num";
+          numSpan.innerHTML = '<i class="fa-solid fa-check"></i>';
+        } else if (i === stepNum) {
+          card.className = "p-3 rounded-xl border border-amber-400 bg-amber-950/30 flex items-center gap-2.5 shadow-lg shadow-amber-500/10";
+          numSpan.className = "w-6 h-6 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-[11px] shrink-0 step-num animate-pulse";
+          numSpan.innerText = i;
+        } else {
+          card.className = "p-3 rounded-xl border border-slate-800 bg-slate-900/60 flex items-center gap-2.5";
+          numSpan.className = "w-6 h-6 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-bold text-[11px] shrink-0 step-num";
+          numSpan.innerText = i;
+        }
+      }
+    }
+
+    function startRegistration() {
+      const headed = document.getElementById('headedCheckbox').checked;
+      const proxy = document.getElementById('proxyInput').value.trim();
+      const presetId = document.getElementById('activePresetSelect').value;
+
+      let targetEmail = null;
+      let imapPassword = null;
+      let autoDotTrick = false;
+      let imapServer = "imap.gmail.com";
+      let imapPort = 993;
+      let catchallDomain = null;
+      let catchallStyle = "corporate";
+      let batchCount = 1;
+      let concurrency = 1;
+
+      if (mailMode === 'catchall') {
+        catchallDomain = (document.getElementById('catchallDomainInput') ? document.getElementById('catchallDomainInput').value : '').trim();
+        targetEmail = (document.getElementById('catchallRecipientEmail') ? document.getElementById('catchallRecipientEmail').value : '').trim();
+        imapPassword = (document.getElementById('catchallImapPassword') ? document.getElementById('catchallImapPassword').value : '').trim() ||
+                       (document.getElementById('imapPasswordInput') ? document.getElementById('imapPasswordInput').value : '').trim();
+        catchallStyle = (document.getElementById('catchallStyleSelect') ? document.getElementById('catchallStyleSelect').value : 'corporate');
+        batchCount = parseInt(document.getElementById('catchallBatchCountInput') ? document.getElementById('catchallBatchCountInput').value : '1') || 1;
+        concurrency = parseInt(document.getElementById('catchallConcurrencyInput') ? document.getElementById('catchallConcurrencyInput').value : '1') || 1;
+        imapServer = (document.getElementById('imapServerInput') ? document.getElementById('imapServerInput').value : 'imap.gmail.com').trim();
+        imapPort = parseInt(document.getElementById('imapPortInput') ? document.getElementById('imapPortInput').value : '993') || 993;
+
+        if (!catchallDomain) {
+          alert('Пожалуйста, укажите ваш домен для Catch-All (например: myteam.xyz)!');
+          const domainEl = document.getElementById('catchallDomainInput');
+          if (domainEl) domainEl.focus();
+          return;
+        }
+        if (!targetEmail) {
+          alert('Пожалуйста, укажите ящик-получатель Gmail / IMAP, куда пересылаются письма!');
+          return;
+        }
+        if (!imapPassword) {
+          alert('Пожалуйста, введите Пароль приложения (App Password) для IMAP ящика-получателя!');
+          const passEl = document.getElementById('catchallImapPassword');
+          if (passEl) passEl.focus();
+          return;
+        }
+
+        try {
+          localStorage.setItem('notion_catchall_domain', catchallDomain);
+          localStorage.setItem('notion_catchall_style', catchallStyle);
+          localStorage.setItem('notion_catchall_recipient', targetEmail);
+          if (imapPassword) localStorage.setItem('notion_imap_password', imapPassword);
+        } catch(e) {}
+
+      } else if (mailMode === 'imap') {
+        targetEmail = document.getElementById('imapEmailInput').value.trim();
+        imapPassword = document.getElementById('imapPasswordInput').value.trim() ||
+                       (document.getElementById('catchallImapPassword') ? document.getElementById('catchallImapPassword').value : '').trim();
+        autoDotTrick = document.getElementById('autoDotTrickCheckbox').checked;
+        imapServer = document.getElementById('imapServerInput').value.trim();
+        imapPort = parseInt(document.getElementById('imapPortInput').value) || 993;
+
+        if (!targetEmail) {
+          alert('Пожалуйста, введите ваш Email для IMAP!');
+          return;
+        }
+        if (!imapPassword) {
+          alert('Пожалуйста, введите Пароль приложения (App Password) для IMAP!');
+          return;
+        }
+        try {
+          if (imapPassword) localStorage.setItem('notion_imap_password', imapPassword);
+        } catch(e) {}
+      } else if (mailMode === 'manual') {
+        targetEmail = document.getElementById('customEmailInput').value.trim();
+        if (!targetEmail) {
+          alert('Пожалуйста, введите ваш email адрес!');
+          return;
+        }
+      }
+
+      const btn = document.getElementById('startRegBtn');
+      btn.disabled = true;
+      btn.classList.add('opacity-50', 'cursor-not-allowed');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Выполняется регистрация...';
+
+      fetch('/api/register/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mode: mailMode,
+          email: targetEmail,
+          imap_password: imapPassword,
+          auto_dot_trick: autoDotTrick,
+          imap_server: imapServer,
+          imap_port: imapPort,
+          catchall_domain: catchallDomain,
+          catchall_style: catchallStyle,
+          batch_count: batchCount,
+          concurrency: concurrency,
+          preset_id: presetId,
+          headless: !headed,
+          proxy: proxy || null
+        })
+      })
+      .then(res => res.json().then(data => ({ status: res.status, data })))
+      .then(({ status, data }) => {
+        if (status !== 200 || !data.success) {
+          alert('Ошибка: ' + (data.detail || 'Не удалось запустить'));
+          resetRegBtn();
+        }
+      })
+      .catch(err => {
+        alert('Сетевая ошибка: ' + err);
+        resetRegBtn();
+      });
+    }
+
+    function resetRegBtn() {
+      const btn = document.getElementById('startRegBtn');
+      btn.disabled = false;
+      btn.classList.remove('opacity-50', 'cursor-not-allowed');
+      btn.innerHTML = '<i class="fa-solid fa-play"></i> Запустить регистрацию & активацию Trial';
+    }
+
+    function submitManualCode() {
+      const code = document.getElementById('codeSubmitInput').value.trim();
+      if (!code) return;
+      fetch('/api/register/submit-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code })
+      }).then(() => {
+        document.getElementById('manualCodePrompt').classList.add('hidden');
+      });
+    }
+
+    function initSSE() {
+      if (eventSource) eventSource.close();
+      eventSource = new EventSource('/api/register/events');
+
+      eventSource.onmessage = function(event) {
+        try {
+          const item = JSON.parse(event.data);
+          appendLog(item.level, item.message, item.time);
+
+          if (item.extra && item.extra.step) {
+            updateStepUI(item.extra.step);
+          }
+
+          if (item.extra && item.extra.waiting_for_code) {
+            document.getElementById('manualCodePrompt').classList.remove('hidden');
+          }
+
+          if (item.level === 'success' || item.level === 'error') {
+            resetRegBtn();
+            loadAccounts();
+          }
+        } catch(e) {}
+      };
+    }
+
+    function loadAccounts() {
+      fetch('/api/accounts')
+        .then(res => res.json())
+        .then(data => {
+          const accounts = data.accounts || [];
+          document.getElementById('accountsCount').innerText = accounts.length;
+          const tbody = document.getElementById('accountsTableBody');
+
+          if (accounts.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-500">
+              Аккаунтов пока нет. Запустите автоматическую регистрацию на первой вкладке!
+            </td></tr>`;
+            return;
+          }
+
+          tbody.innerHTML = accounts.map(acc => {
+            const days = acc.days_remaining !== undefined ? acc.days_remaining : 30;
+            const tokenCut = acc.token_v2 ? (acc.token_v2.slice(0, 16) + '...') : '-';
+            const spaceId = acc.space_id ? (acc.space_id.slice(0, 12) + '...') : '-';
+
+            return `
+              <tr class="hover:bg-slate-900/40 transition">
+                <td class="p-4">
+                  <div class="font-semibold text-white">${acc.user_email}</div>
+                  <div class="text-[11px] text-slate-400">${acc.space_name || 'Business Workspace'}</div>
+                </td>
+                <td class="p-4">
+                  <span class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-medium text-[11px]">
+                    ${acc.plan_type || 'business_trial'}
+                  </span>
+                </td>
+                <td class="p-4">
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold text-[11px]">
+                    ${days} дней осталось
+                  </span>
+                </td>
+                <td class="p-4 font-mono text-[11px] text-slate-400" title="${acc.token_v2}">
+                  ${tokenCut}
+                </td>
+                <td class="p-4 font-mono text-[11px] text-slate-400" title="${acc.space_id}">
+                  ${spaceId}
+                </td>
+                <td class="p-4 text-right space-x-1.5 whitespace-nowrap">
+                  <button onclick="makeAccountActive('${acc.filename}')" title="Сделать активным для API (:8765)" class="p-1.5 px-2.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 transition text-[11px] font-semibold">
+                    <i class="fa-solid fa-check"></i> Сделать активным
+                  </button>
+                  <button onclick="copyToClipboard('${acc.token_v2}')" title="Скопировать token_v2" class="p-1.5 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 transition">
+                    <i class="fa-regular fa-copy"></i>
+                  </button>
+                  <button onclick="deleteAccount('${acc.filename}')" title="Удалить" class="p-1.5 px-2.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        });
+    }
+
+    function makeAccountActive(filename) {
+      fetch(`/api/active-account/${filename}`, { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert('Аккаунт успешно установлен активным для API!');
+            checkSystemStatus();
+          } else {
+            alert('Ошибка: ' + (data.detail || 'Не удалось активировать'));
+          }
+        });
+    }
+
+    function deleteAccount(filename) {
+      if (!confirm('Вы уверены, что хотите удалить этот аккаунт из пула?')) return;
+      fetch(`/api/accounts/${filename}`, { method: 'DELETE' })
+        .then(() => loadAccounts());
+    }
+
+    function exportAccounts(format) {
+      window.open(`/api/accounts/export?format=${format}`, '_blank');
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+      alert('Скопировано в буфер обмена!');
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text);
+      alert('Команда скопирована: ' + text);
+    }
+
+    function copyOpenCodeConfig() {
+      const text = document.getElementById('opencodeConfigPreview').innerText;
+      navigator.clipboard.writeText(text);
+      alert('Конфиг OpenCode скопирован в буфер обмена!');
+    }
+
+    function copyPythonExample() {
+      const text = document.getElementById('pythonExamplePreview').innerText;
+      navigator.clipboard.writeText(text);
+      alert('Пример Python скопирован в буфер обмена!');
+    }
+
+    function rotatePoolAccount() {
+      fetch('/api/pool/rotate', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          loadActiveAccount();
+          loadAccounts();
+        })
+        .catch(err => console.error('Ошибка ротации:', err));
+    }
+
+    function reloadBridgeAccount() {
+      fetch('/api/bridge/restart', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          alert('API Мост перезапущен и синхронизирован с активным аккаунтом!');
+          checkSystemStatus();
+        });
+    }
+
+    function checkSystemStatus() {
+      fetch('/api/status')
+        .then(res => res.json())
+        .then(data => {
+          // Менеджер (Go) :8081
+          const mgr = data.manager;
+          const statusText = document.getElementById('managerStatusText');
+          if (mgr && mgr.running) {
+            statusText.innerText = `Онлайн (:${mgr.port})`;
+            statusText.className = "text-emerald-400";
+          } else {
+            statusText.innerText = "Остановлен";
+            statusText.className = "text-rose-400";
+          }
+
+          // Codex Bridge :8765
+          const br = data.bridge;
+          const bridgeText = document.getElementById('bridgeStatusText');
+          const bridgeDot = document.getElementById('bridgeStatusDot');
+          if (br && br.bridge_online) {
+            bridgeText.innerText = `Онлайн (:8765)`;
+            bridgeText.className = "text-amber-400";
+            if (bridgeDot) bridgeDot.className = "w-2 h-2 rounded-full bg-amber-400 animate-pulse";
+          } else {
+            bridgeText.innerText = "Остановлен";
+            bridgeText.className = "text-rose-400";
+            if (bridgeDot) bridgeDot.className = "w-2 h-2 rounded-full bg-rose-500";
+          }
+
+          // Активный аккаунт
+          const acc = data.active_account;
+          const emailEl = document.getElementById('apiActiveEmail');
+          const detailsEl = document.getElementById('apiActiveDetails');
+          if (acc && acc.user_email) {
+            if (emailEl) emailEl.innerText = acc.user_email + (acc.space_name ? ` (${acc.space_name})` : '');
+            const days = acc.days_remaining !== undefined ? acc.days_remaining : 30;
+            if (detailsEl) detailsEl.innerText = `Тариф: ${acc.plan_type || 'Business Trial'} | Осталось: ~${days} дней | Space: ${acc.space_id || '-'}`;
+          } else {
+            if (emailEl) emailEl.innerText = 'Нет активного аккаунта (зарегистрируйте на вкладке Регистратор)';
+            if (detailsEl) detailsEl.innerText = 'Нажмите "Запустить регистрацию" для создания аккаунта';
+          }
+
+          document.getElementById('accountsCount').innerText = data.accounts_count || 0;
+        });
+    }
+
+    function loadSavedCatchAll() {
+      try {
+        const savedDomain = localStorage.getItem('notion_catchall_domain');
+        if (savedDomain) {
+          const domInput = document.getElementById('catchallDomainInput');
+          if (domInput) domInput.value = savedDomain;
+        }
+        const savedRecipient = localStorage.getItem('notion_catchall_recipient');
+        if (savedRecipient) {
+          const recInput = document.getElementById('catchallRecipientEmail');
+          if (recInput) recInput.value = savedRecipient;
+        }
+        const savedPass = localStorage.getItem('notion_imap_password');
+        if (savedPass) {
+          const pass1 = document.getElementById('catchallImapPassword');
+          const pass2 = document.getElementById('imapPasswordInput');
+          if (pass1) pass1.value = savedPass;
+          if (pass2) pass2.value = savedPass;
+        }
+        const savedStyle = localStorage.getItem('notion_catchall_style');
+        if (savedStyle) {
+          const styleEl = document.getElementById('catchallStyleSelect');
+          if (styleEl) styleEl.value = savedStyle;
+        }
+        setMailMode('catchall');
+      } catch(e) {}
+    }
+
+    window.onload = function() {
+      initSSE();
+      loadPresets();
+      loadAccounts();
+      checkSystemStatus();
+      loadSavedProxy();
+      loadSavedCatchAll();
+      updateBatchCalc();
+      setInterval(checkSystemStatus, 5000);
+    };
+  </script>
+</body>
+</html>

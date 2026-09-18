@@ -1,0 +1,3 @@
+server:
+    api_key: "sk-a99be21ebd90d87d796c314e8616b628"
+    admin_password: "$sha256$956d03449d4cec839f5f1c431316cc1a$58551e4b391e936af7ced1e3443f6066825caadd3d0a07ac8ddabdfc3892ef38"

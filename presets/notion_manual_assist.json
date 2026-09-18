@@ -1,0 +1,46 @@
+{
+  "id": "notion_manual_assist",
+  "name": "✋ Ручной ассистент / Захват токена",
+  "description": "Открывает окно браузера для самостоятельных действий. Вы можете войти или пройти шаги сами, а затем нажать одну кнопку 'Захватить токен в пул'.",
+  "browser": {
+    "channel": "chrome",
+    "headless": false,
+    "use_persistent_context": false,
+    "user_data_dir": "browser_profiles/manual",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "user_agent": null,
+    "args": [
+      "--disable-blink-features=AutomationControlled"
+    ]
+  },
+  "urls": {
+    "signup": "https://app.notion.com/signup",
+    "login": "https://www.notion.so/login"
+  },
+  "selectors": {
+    "email_input": "input[type='email'], input[placeholder*='name@company.com' i], input[placeholder*='email' i], input[type='text']",
+    "continue_btn": "button:has-text('Continue with email'), button:has-text('Continue')",
+    "code_input": "input[placeholder*='code' i], input[autocomplete='one-time-code'], input[type='text']",
+    "onboarding_work": "text='For work', text='With my team', text='For my team', text='Work', [data-testid='onboarding-for-work']",
+    "skip_buttons": "button:has-text('Skip'), button:has-text('Skip for now'), text='Skip', text='Skip for now'",
+    "free_plan": "text='Free plan', text='Free', button:has-text('Continue with Free'), [data-testid='free-plan-card']",
+    "settings_btn": "text='Settings & members', text='Settings', [data-tab-name='settings']",
+    "teamspaces_tab": "text='Teamspaces', [data-tab-name='teamspaces']",
+    "new_teamspace_btn": "button:has-text('New teamspace'), text='New teamspace', text='Create a teamspace'",
+    "open_access": "text='Open', label:has-text('Open'), [data-value='open']",
+    "start_trial_btn": "button:has-text('Start free trial'), text='Start free trial', button:has-text('Try Business'), text='Upgrade to Business'"
+  },
+  "delays": {
+    "after_navigate_ms": 3000,
+    "after_click_ms": 1000,
+    "step_timeout_sec": 60,
+    "mail_timeout_sec": 180
+  },
+  "workspace": {
+    "default_name": "My Workspace",
+    "teamspace_name": "Team Space"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "id": "notion_business_trial_default",
+  "name": "⚡ Notion Business Trial (Автоматический)",
+  "description": "Полный цикл автоматической регистрации: ввод email -> получение кода -> выбор Work -> Free план -> Teamspaces Open -> Start free trial -> сохранение в пул",
+  "browser": {
+    "channel": "chrome",
+    "headless": false,
+    "use_persistent_context": true,
+    "user_data_dir": "browser_profiles/default",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "user_agent": null,
+    "args": [
+      "--disable-blink-features=AutomationControlled",
+      "--no-sandbox"
+    ]
+  },
+  "urls": {
+    "signup": "https://app.notion.com/signup",
+    "login": "https://www.notion.so/login"
+  },
+  "selectors": {
+    "email_input": "input[type='email'], input[placeholder*='name@company.com' i], input[placeholder*='email' i], input[type='text']",
+    "continue_btn": "div[role='button']:has-text('Continue'), button:has-text('Continue with email'), button:has-text('Continue'), [role='button']:has-text('Continue')",
+    "code_input": "input[placeholder*='code' i], input[autocomplete='one-time-code'], input[type='text']",
+    "onboarding_work": "text='For work', text='With my team', text='For my team', text='Work', [data-testid='onboarding-for-work']",
+    "skip_buttons": "button:has-text('Start from scratch'), div[role='button']:has-text('Start from scratch'), button:has-text('Skip for now'), button:has-text('Skip'), text='Start from scratch', text='Skip for now', text='Skip'",
+    "free_plan": "text='Free plan', text='Free', button:has-text('Continue with Free'), [data-testid='free-plan-card']",
+    "settings_btn": "text='Settings & members', text='Settings', [data-tab-name='settings']",
+    "teamspaces_tab": "text='Teamspaces', [data-tab-name='teamspaces']",
+    "new_teamspace_btn": "button:has-text('New teamspace'), text='New teamspace', text='Create a teamspace'",
+    "open_access": "text='Open', label:has-text('Open'), [data-value='open']",
+    "start_trial_btn": "button:has-text('Start free trial'), text='Start free trial', button:has-text('Try Business'), text='Upgrade to Business'"
+  },
+  "delays": {
+    "after_navigate_ms": 4000,
+    "after_click_ms": 1500,
+    "step_timeout_sec": 25,
+    "mail_timeout_sec": 120
+  },
+  "workspace": {
+    "default_name": "Business Team",
+    "teamspace_name": "Main Teamspace"
+  }
+}

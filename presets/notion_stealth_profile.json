@@ -1,0 +1,47 @@
+{
+  "id": "notion_stealth_profile",
+  "name": "🛡️ Постоянный профиль (Persistent Anti-Detect)",
+  "description": "Использует сохранённый профиль Chrome в папке browser_profiles/stealth. Позволяет один раз пройти Cloudflare, сохранить куки и не вызывать подозрения антифрода Notion.",
+  "browser": {
+    "channel": "chrome",
+    "headless": false,
+    "use_persistent_context": true,
+    "user_data_dir": "browser_profiles/stealth",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "user_agent": null,
+    "args": [
+      "--disable-blink-features=AutomationControlled",
+      "--no-sandbox"
+    ]
+  },
+  "urls": {
+    "signup": "https://app.notion.com/signup",
+    "login": "https://www.notion.so/login"
+  },
+  "selectors": {
+    "email_input": "input[type='email'], input[placeholder*='name@company.com' i], input[placeholder*='email' i], input[type='text']",
+    "continue_btn": "button:has-text('Continue with email'), button:has-text('Continue')",
+    "code_input": "input[placeholder*='code' i], input[autocomplete='one-time-code'], input[type='text']",
+    "onboarding_work": "text='For work', text='With my team', text='For my team', text='Work', [data-testid='onboarding-for-work']",
+    "skip_buttons": "button:has-text('Skip'), button:has-text('Skip for now'), text='Skip', text='Skip for now'",
+    "free_plan": "text='Free plan', text='Free', button:has-text('Continue with Free'), [data-testid='free-plan-card']",
+    "settings_btn": "text='Settings & members', text='Settings', [data-tab-name='settings']",
+    "teamspaces_tab": "text='Teamspaces', [data-tab-name='teamspaces']",
+    "new_teamspace_btn": "button:has-text('New teamspace'), text='New teamspace', text='Create a teamspace'",
+    "open_access": "text='Open', label:has-text('Open'), [data-value='open']",
+    "start_trial_btn": "button:has-text('Start free trial'), text='Start free trial', button:has-text('Try Business'), text='Upgrade to Business'"
+  },
+  "delays": {
+    "after_navigate_ms": 5000,
+    "after_click_ms": 2000,
+    "step_timeout_sec": 35,
+    "mail_timeout_sec": 120
+  },
+  "workspace": {
+    "default_name": "Pro Teamspace",
+    "teamspace_name": "Core Space"
+  }
+}

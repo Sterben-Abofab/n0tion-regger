@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Private Data, Accounts & Profiles (DO NOT COMMIT)
+accounts/
+accounts_archive/
+browser_profiles/
+scratch/
+debug_*.png
+*.png
+*.log
+
+# Prompt & Agent Rules (Local only)
+AGENTS.md
+GEMINI.md
+
+# Portable Embedded Runtimes & Archives
+runtime/
+*.zip
+
+# IDE & OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+.gemini/
