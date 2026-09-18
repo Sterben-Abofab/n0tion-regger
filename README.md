@@ -18,9 +18,8 @@
 ## 🚀 Возможности
 
 - 🤖 **Автоматическая регистрация Business Trial (30 дней)** в 1 клик через Playwright CDP.
-- 📬 **Любые типы почт**: поддержка временных почт Mail.tm, собственных Catch-all доменов и IMAP (Gmail/Yandex/Mail.ru).
+- 📬 **Любые типы почт**: поддержка собственных Catch-all доменов и IMAP (Gmail).
 - 🔌 **Локальный OpenAI-совместимый API Мост (`:8765/v1`)**:
-  - Полная поддержка `claude-3-7-sonnet`, `claude-3-7-sonnet-thought` (с рассуждениями), `claude-3-5-sonnet`, `gpt-4o`, `gemini-1.5-pro`.
   - Прямое подключение к **Cursor**, **OpenCode CLI**, **Cline**, **Roo Code**, **Aider**.
 - 🔄 **Пул аккаунтов и ротация**: переключение между активными аккаунтами без прерывания сессий.
 - 🛡 **Антифрод защита**: стерильный режим браузера, изоляция отпечатков, автоматическое закрытие нежелательных вкладок, поддержка прокси.
@@ -76,20 +75,21 @@ python app.py
 - **Base URL (Endpoint)**: `http://localhost:8765/v1`
 - **API Key**: `abofab`
 - **Поддерживаемые модели**:
-  - `claude-3-7-sonnet`
-  - `claude-3-7-sonnet-thought` *(Reasoning)*
-  - `claude-3-5-sonnet`
-  - `claude-3-5-haiku`
-  - `gpt-4o`
-  - `gemini-1.5-pro`
-  - `gemini-2.0-flash`
+  - `opus-5` (Claude Opus 5)
+  - `sonnet-5` (Claude Sonnet 5)
+  - `sonnet-4.6` (Claude Sonnet 4.6)
+  - `gpt-5.6-sol` (GPT-5.6 Sol)
+  - `gpt-5.5` (GPT 5.5)
+  - `gemini-3.1-pro` (Gemini 3.1 Pro)
+  - `deepseek-v4-pro` (DeepSeek V4 Pro)
+  - `grok-4.6` (Grok 4.6)
 
 ### Пример для OpenCode CLI / Cursor:
 ```json
 {
   "endpoint": "http://localhost:8765/v1",
   "apiKey": "abofab",
-  "model": "claude-3-7-sonnet"
+  "model": "sonnet-5"
 }
 ```
 
