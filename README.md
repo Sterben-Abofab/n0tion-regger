@@ -2,8 +2,6 @@
 
 <div align="center">
 
-![Abofab Logo](static/abofab_logo.jpg)
-
 **Автономная студия автоматической регистрации Notion Business Trial и локальный OpenAI-совместимый API прокси для AI-агентов (Cursor, OpenCode CLI, Cline, Claude Code).**
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
